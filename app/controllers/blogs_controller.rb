@@ -10,12 +10,13 @@ class BlogsController < ApplicationController
   end
 
   def show
-    @blog = if Blog.find(params[:id]).secret == true && current_user.nil?
-              raise ActiveRecord::RecordNotFound
-            elsif Blog.find(params[:id]).secret == true
+    blog = Blog.find(params[:id])
+    @blog = if blog.secret && current_user.nil?
+              Blog.find(params[-1])
+            elsif blog.secret
               current_user.blogs.find(params[:id])
             else
-              Blog.find(params[:id])
+              blog
             end
   end
 
@@ -55,10 +56,8 @@ class BlogsController < ApplicationController
   end
 
   def blog_params
-    if current_user.premium == true
-      params.require(:blog).permit(:title, :content, :secret, :random_eyecatch)
-    else
-      params.require(:blog).permit(:title, :content, :secret)
-    end
+    set_params = params.require(:blog).permit(:title, :content, :secret)
+    set_params = set_params.merge(random_eyecatch: params[:blog][:random_eyecatch]) if current_user.premium == true
+    set_params
   end
 end
