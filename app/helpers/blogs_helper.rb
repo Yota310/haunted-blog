@@ -2,7 +2,6 @@
 
 module BlogsHelper
   def format_content(blog)
-    content = ERB::Util.html_escape(blog.content)
-    sanitize(content.gsub("\n", '<br>'))
+    safe_join(blog.content.split("\n"), tag.br)
   end
 end
