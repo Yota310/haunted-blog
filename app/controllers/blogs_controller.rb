@@ -25,6 +25,7 @@ class BlogsController < ApplicationController
 
   def create
     @blog = current_user.blogs.new(blog_params)
+
     if @blog.save
       redirect_to blog_url(@blog), notice: 'Blog was successfully created.'
     else
@@ -54,7 +55,7 @@ class BlogsController < ApplicationController
 
   def blog_params
     set_params = params.require(:blog).permit(:title, :content, :secret)
-    set_params = set_params.merge(random_eyecatch: params[:blog][:random_eyecatch]) if current_user.premium == true
+    set_params = set_params.merge(random_eyecatch: params[:blog][:random_eyecatch]) if current_user.premium
     set_params
   end
 end
