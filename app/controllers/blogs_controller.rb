@@ -13,7 +13,7 @@ class BlogsController < ApplicationController
     @blog = if current_user
               Blog.published.or(current_user.blogs).find(params[:id])
             else
-              Blog.find_by!(id: params[:id], secret: false)
+              Blog.published.find_by!(id: params[:id])
             end
   end
 
