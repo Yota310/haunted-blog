@@ -54,8 +54,8 @@ class BlogsController < ApplicationController
   end
 
   def blog_params
-    set_params = params.require(:blog).permit(:title, :content, :secret)
-    set_params = set_params.merge(random_eyecatch: params[:blog][:random_eyecatch]) if current_user.premium
-    set_params
+    setting_params = %i[title content secret]
+    setting_params.push(:random_eyecatch) if current_user.premium
+    params.require(:blog).permit(setting_params)
   end
 end
